@@ -24,7 +24,7 @@ try:
     LIST_BOTS = config("BOTS")
     CHANNEL_ID = config("CHANNEL_ID", cast=int)
     MESSAGE_ID = config("MESSAGE_ID", cast=int)
-    CHANNEL_NAME = config("CHANNEL_NAME", default="@BotzStatuz")
+    CHANNEL_NAME = config("CHANNEL_NAME", default="@BotzHub")
     TIME_ZONE = config("TIME_ZONE", default="Asia/Kolkata")
 except BaseException as ex:
     log.info(ex)
@@ -108,6 +108,7 @@ async def check_bots():
         status_message += (
             f"━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🤖 **Bot: {bot}**\n"
+            f"├ Username: @{bot}\n"
             f"├ Response Time: {value['response_time']}\n"
             f"└ Status: {value['status']}\n"
         )
@@ -136,8 +137,8 @@ async def check_bots():
     current_time = current_time_utc.astimezone(pytz.timezone(TIME_ZONE))
     status_message += f"• **Last Checked At** `{current_time.strftime('%H:%M:%S - %d %B %Y')} [ {TIME_ZONE} ]` •\n"
 
-    # add auto check message
-    status_message += f"\n• *This message will be updated every 2 hours.* •"
+    # add auto-update message
+    status_message += f"\n• *This message will be updated every 2 hours.* •\n"
 
     # edit the message in the channel
     try:
