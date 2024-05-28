@@ -1,4 +1,4 @@
-# © Dev-Yoko 
+# © Dev-Yoko
 
 import asyncio
 import logging
@@ -53,14 +53,17 @@ async def check_bots():
     for bot in BOTS:
         time_before_sending = time.time()
         try:
+            # Ensure the bot entity exists
+            bot_entity = await client.get_input_entity(bot)
+            
             # Send a message to the bot and wait for a response
-            sent_msg = await client.send_message(bot, "/start")
+            sent_msg = await client.send_message(bot_entity, "/start")
             await asyncio.sleep(10)  # Wait for 10 seconds to allow the bot to respond
             
             # Check the history for the bot's response
             history = await client(
                 functions.messages.GetHistoryRequest(
-                    peer=bot,
+                    peer=bot_entity,
                     offset_id=0,
                     offset_date=None,
                     add_offset=0,
@@ -85,6 +88,12 @@ async def check_bots():
                     "response_time": f"`{round(time_taken_for_response * 1000, 3)}ms`",  
                     "status": "✅",  # Bot is responding correctly
                 }
+        except ValueError as ve:
+            log.error(f"Cannot find any entity corresponding to '{bot}': {ve}")
+            bot_stats[bot] = {
+                "response_time": "",
+                "status": "❌",  # Bot entity not found
+            }
         except FloodWaitError as fwe:
             log.warning(f"Flood control limit reached. Waiting for {fwe.seconds} seconds.")
             await asyncio.sleep(fwe.seconds)
