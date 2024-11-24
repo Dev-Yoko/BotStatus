@@ -19,7 +19,7 @@ jobs:
           repository: ${{ secrets.REPO_NAME }}
       - name: 📀 Install dependencies. 📀
         run: |
-          pip install python-decouple pytz telethon
+          pip install python-decouple pytz telethon==1.37.0
           pip install --upgrade pip
       - name: 🏃‍♂️ Run the UserClient. 🏃‍♂️
         run: |
